@@ -1,2 +1,3 @@
-.remote
+./
+../
 rename_md_files.sh
