@@ -2,9 +2,10 @@
 title: 【モチベアップ】情熱プログラマーを読んでみた
 tags:
   - 未経験エンジニア
+  - 未経験からWeb系
   - 情熱プログラマー
 private: false
-updated_at: '2024-10-08T01:33:39+09:00'
+updated_at: '2024-10-21T14:14:00+09:00'
 id: 7dd2db947aa6deca40b0
 organization_url_name: null
 slide: false

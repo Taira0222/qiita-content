@@ -4,8 +4,9 @@ tags:
   - Linux
   - 未経験エンジニア
   - source
+  - 未経験からWeb系
 private: false
-updated_at: '2024-10-18T09:37:19+09:00'
+updated_at: '2024-10-21T14:15:47+09:00'
 id: 90a6b00225d5f6ecffb1
 organization_url_name: null
 slide: false

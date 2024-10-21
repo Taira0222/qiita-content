@@ -4,8 +4,9 @@ tags:
   - Ruby
   - 未経験エンジニア
   - 後置if
+  - 未経験からWeb系
 private: false
-updated_at: '2024-10-17T15:23:51+09:00'
+updated_at: '2024-10-21T14:12:47+09:00'
 id: fc3824636b4a783cce3e
 organization_url_name: null
 slide: false
