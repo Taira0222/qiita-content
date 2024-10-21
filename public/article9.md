@@ -3,8 +3,10 @@ title: 【Ruby】unlessは簡単な構文の時に使おう
 tags:
   - Ruby
   - 未経験エンジニア
+  - unless
+  - 未経験からWeb系
 private: false
-updated_at: '2024-10-07T02:07:03+09:00'
+updated_at: '2024-10-21T14:13:08+09:00'
 id: 7ecb68df0b96eb5aed53
 organization_url_name: null
 slide: false

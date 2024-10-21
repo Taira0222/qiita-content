@@ -4,8 +4,9 @@ tags:
   - Ruby
   - array
   - 未経験エンジニア
+  - 未経験からWeb系
 private: false
-updated_at: '2024-10-10T01:27:34+09:00'
+updated_at: '2024-10-21T14:14:33+09:00'
 id: 97be7878fcfb85d02dbd
 organization_url_name: null
 slide: false

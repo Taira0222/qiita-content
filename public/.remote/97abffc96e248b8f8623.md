@@ -3,8 +3,9 @@ title: 【Linux】mvに-rがいらない理由
 tags:
   - Linux
   - 未経験エンジニア
+  - 未経験からWeb系
 private: false
-updated_at: '2024-10-05T07:15:30+09:00'
+updated_at: '2024-10-21T14:11:35+09:00'
 id: 97abffc96e248b8f8623
 organization_url_name: null
 slide: false

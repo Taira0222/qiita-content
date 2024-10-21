@@ -4,9 +4,10 @@ tags:
   - Ruby
   - スクリプト言語
   - 未経験エンジニア
+  - 未経験からWeb系
   - コンパイル言語
 private: false
-updated_at: '2024-10-21T02:04:11+09:00'
+updated_at: '2024-10-21T14:16:54+09:00'
 id: f136e1c10efd19827a1e
 organization_url_name: null
 slide: false

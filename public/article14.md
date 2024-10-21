@@ -4,6 +4,7 @@ tags:
   - Ruby
   - uniq
   - 未経験エンジニア
+  - 未経験からWeb系
 private: false
 updated_at: '2024-10-12T05:57:45+09:00'
 id: a8c944ea7c5a24db1016

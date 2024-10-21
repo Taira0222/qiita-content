@@ -4,8 +4,9 @@ tags:
   - Ruby
   - オブジェクト指向
   - 未経験エンジニア
+  - 未経験からWeb系
 private: false
-updated_at: '2024-10-20T09:56:44+09:00'
+updated_at: '2024-10-21T14:16:40+09:00'
 id: a5fa65f669b786bc10db
 organization_url_name: null
 slide: false
