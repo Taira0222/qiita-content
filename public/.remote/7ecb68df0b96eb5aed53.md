@@ -6,7 +6,7 @@ tags:
   - unless
   - 未経験からWeb系
 private: false
-updated_at: '2024-10-21T14:13:08+09:00'
+updated_at: '2024-10-22T00:14:37+09:00'
 id: 7ecb68df0b96eb5aed53
 organization_url_name: null
 slide: false
@@ -17,19 +17,19 @@ ignorePublish: false
 余談ですが、10月中にやっとGitやLinuxなどの勉強がひと段落しました（まだ基礎レベル）。今月からRubyの勉強を始めましたので、Rubyに関する記事が増えるかもしれません。では、さっそく本題に入りましょう。
 
 # unlessとは
-`unless`は、`if`の逆の条件を扱う構文です。具体的には「条件が`false`のときに実行する」ために使われます。
-`if`は条件がtrueの場合に実行されるのに対し、`unless`は条件が`false`の場合に実行されます。
+`unless`は、`if`の逆の条件を扱う構文です。具体的には「条件が偽のときに実行する」ために使われます。
+`if`は条件が真の場合に実行されるのに対し、`unless`は条件が偽の場合に実行されます。
 `unless`は読みやすさやコードの意図を明確にするために便利で、特にシンプルな否定条件に対して効果的です。
-基本構文は以下の通りです。
+基本構文は以下の通りです真。
 ```ruby:unless1.rb
 unless 条件式
-  # 条件が false の場合に実行されるコード
+  # 条件が 偽 の場合に実行されるコード
 end
 ```
 もちろんif文と`!`を用いて同様に表すことができます。
 ```ruby:if1.rb
 if !条件式
-  # 条件が false の場合に実行されるコード
+  # 条件が 偽 の場合に実行されるコード
 end
 ```
 
@@ -61,15 +61,11 @@ unlessを使わない場面はいくつかありますが代表的なものを�
 # 悪い例
 unless user_logged_in || admin_rights
   puts "ログインしてください"
-else
-  puts "ようこそ"
 end
 
 # 良い例
 if !user_logged_in && !admin_rights
   puts "ログインしてください"
-else
-  puts "ようこそ"
 end
 ```
 
