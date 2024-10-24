@@ -2,12 +2,12 @@
 title: 【未経験がエンジニアになるまで】勉強を始めて1か月がたちました。
 tags:
   - HTML
-  - CSS
   - JavaScript
+  - 初心者
   - 未経験エンジニア
   - 未経験からWeb系
 private: false
-updated_at: '2024-10-21T14:11:19+09:00'
+updated_at: '2024-10-24T06:46:31+09:00'
 id: 79fcf789d853ae70c573
 organization_url_name: null
 slide: false
