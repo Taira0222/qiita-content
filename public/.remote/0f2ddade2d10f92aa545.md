@@ -1,12 +1,13 @@
 ---
 title: 【勉強記録】エンジニアに向けての勉強を始めて2.5か月がたちました
 tags:
+  - 初心者
   - 未経験エンジニア
   - 独学
   - 勉強記録
   - 未経験からWeb系
 private: false
-updated_at: '2024-10-21T14:16:27+09:00'
+updated_at: '2024-10-24T06:46:44+09:00'
 id: 0f2ddade2d10f92aa545
 organization_url_name: null
 slide: false
