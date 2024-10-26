@@ -7,7 +7,7 @@ tags:
   - 未経験エンジニア
   - 未経験からWeb系
 private: false
-updated_at: '2024-10-25T15:59:50+09:00'
+updated_at: '2024-10-26T08:09:22+09:00'
 id: aca062a0cfb879fded31
 organization_url_name: null
 slide: false
@@ -91,6 +91,24 @@ Animal.general_info  # => Animals are living creatures.
 ```
 クラスメソッドはselfを使って定義され、インスタンスを生成する必要がありません。このメソッドはクラスそのものに対して呼び出されます。
 インスタンスメソッドは`インスタンス.メソッド`でしたが、クラスメソッドの場合は`クラス.メソッド`であることとメソッドを定義する際に`self`を忘れずにつけましょう。
+
+### 補足
+どうやら、クラスメソッドの場合は`self.general_info`と記載するのではなく以下のようにするのが一般的なようです
+```ruby:compliment.rb
+class Animal
+  class << self
+    def general_info
+      puts "Animals are living creatures."
+    end
+    
+    def common_traits
+      puts "Animals need water and food to survive."
+    end
+  end
+end
+```
+このように、`class << self`のブロック内にまとめると、複数のクラスメソッドが並ぶことを示しやすくなるため、読み手にとっても「この部分はクラスメソッドの定義である」と直感的に理解しやすくなります。
+また、クラスメソッドが変更しやすかったり(メンテナンス性向上),可読性の観点からこの方法が好まれるようです。
 
 # まとめ
 この記事では、Rubyのメソッドについて基本的な知識を整理しました。
