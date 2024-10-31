@@ -7,7 +7,7 @@ tags:
   - レシーバ
   - 未経験からWeb系
 private: false
-updated_at: '2024-10-27T01:32:59+09:00'
+updated_at: '2024-10-30T13:09:07+09:00'
 id: 5fa71da3f9a6ba8d88ba
 organization_url_name: null
 slide: false
@@ -27,7 +27,7 @@ ignorePublish: false
 str = "hello"   # str は String クラスのオブジェクト
 str.upcase      # str がレシーバとなり、upcase メソッドが呼ばれる
 ```
-ここでは、`hello`というStringオブジェクトが`upcase`メソッドを呼び出しています。
+ここでは、`hello`というStringオブジェクトの`upcase`メソッドを呼び出しています。
 この場合、`str`がレシーバです。メソッドがレシーバに対して何らかの操作を行い、その結果が返されます。
 
 # selfとは
@@ -38,31 +38,20 @@ str.upcase      # str がレシーバとなり、upcase メソッドが呼ばれ
 まずは省略できるケースから紹介します
 
 ### selfが省略できるケース
+selfが省略できるのはインスタンスメソッドの場合です。詳しく見ていきましょう。
 ```ruby:self1.rb
 class Person
   def greet
     puts "Hello!"
   end
-
-  def welcome
-    greet  # ここでのgreetはself.greetと同じ意味
-  end
 end
 
 person = Person.new
-person.welcome  # => "Hello!"
+person.greet  # => "Hello!"
 ```
-この例では、`welcome`メソッド内で`greet`メソッドを呼び出していますが、`greet`の前に何もレシーバを書いていません。
-先ほど`self`は現在のレシーバ（メソッドを呼び出しているオブジェクト）であると言っていたのに、、と思うかもしれませんが一回説明を聞いてくださいw
-`greet`はインスタンスメソッドであり、これを呼び出すためには`person.greet`と呼び出す必要があります。
-それはwelcomeの中でもそうなのですが、この場合は現在のレシーバ（メソッドを呼び出しているオブジェクト）である`self`を使用します。
-英語でいう代名詞みたいなもので、例えば「Mike is kind. Mike has two brothers」とは言わずに「Mike is kind. He has two brothers」といいますよね。
-Mikeという人の名前を繰り返し避けるためにHeを使用していますが、`self`も`person`インスタンスを置き換えているという点では似ています
-
-では話を戻します。Rubyはインスタンスメソッド内では、同じクラス内の他のインスタンスメソッドを呼び出す際に`self`を省略できます。
-なので`greet`を`self.greet`と解釈してくれます。
-この場合、`self`は`Person`クラスのインスタンスである`person`を指しています。
-つまり、greetメソッドを呼び出しているのは`self`、つまり`person`というオブジェクトです。
+この例では、`person`インスタンスを生成して、`greet`メソッドで呼び出しています。
+`greet`はインスタンスメソッドと呼ばれ、呼び出す場合には`self`を使用しないでも大丈夫です。
+これはRubyが現在のレシーバであるインスタンス(今回は`person`)を`self`として解釈してくれるからです。
 
 ### selfが省略できないケース
 クラスメソッドを使う場合は`self`を省略することができません。※
