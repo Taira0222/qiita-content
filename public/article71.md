@@ -1,5 +1,5 @@
 ---
-title: 【Ruby】 今日書いた誤りのコードの振り返り
+title: 【Ruby】 今日書いたコードの振り返り#2
 tags:
   - Ruby
   - time
@@ -7,7 +7,7 @@ tags:
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2024-12-08T07:10:59+09:00'
+updated_at: '2024-12-08T07:13:30+09:00'
 id: bfeb4d37267485d9a8f9
 organization_url_name: null
 slide: false
