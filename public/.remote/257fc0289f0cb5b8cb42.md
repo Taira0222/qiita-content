@@ -7,7 +7,7 @@ tags:
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2024-12-14T08:15:51+09:00'
+updated_at: '2024-12-15T16:28:04+09:00'
 id: 257fc0289f0cb5b8cb42
 organization_url_name: null
 slide: false
@@ -265,6 +265,14 @@ book = @books.find { |b| b.isbn == "9780451524935" }
 ```
 このコードは、`@books` 配列の中で `isbn` が `"9780451524935"` に一致する最初の `Book` インスタンスを返します。
 条件に合う要素が見つからない場合は `nil` を返します。
+(追記)
+実際に値を変更しているのは`@borrowed`のみなので意図しないエラーをおこさないためにも以下のように書くべきです
+```ruby
+attr_accessor :borrowed #読み取りと書き取りができる
+attr_reader :title, :author, :isbn #読みとりのみ
+```
+
+
 ### `Array#select` メソッドについて
 `select` メソッドは、配列の中から**ブロックの条件に合うすべての要素を配列**として返します。
 ```ruby
@@ -277,7 +285,7 @@ results = @books.select { |b| b.title.include?("Great") }
 
 ### `results.any?` メソッドについて
 `any?` メソッドは、配列やコレクションに1つ以上の要素が存在する場合に `true` を返します。
-逆に、配列が空の場合は `false` を返します。
+逆に、すべての要素が偽である場合に `false` を返します
 ```ruby
 results = @books.select { |b| b.title.include?("Great") }
 if results.any?
@@ -288,6 +296,17 @@ end
 ```
 `results.any?` が `true` の場合、検索結果が1つ以上あるため、`results` の内容を出力します。
 `results` が空の場合、`else` ブロックの `"該当する書籍が見つかりません。"` が実行されます。
+#### (追記) `any?`と`empty?`について
+今回のコードで特段問題になるわけではないのですが、any?は配列の中に真の要素があればtrueを返すのが目的です。
+今回は配列`results`の中に要素が入っているか否かが知りたいので、empty?を使用するべきです
+```ruby
+results = @books.select { |b| b.title.include?("Great") }
+if !results.empty?
+  results.each { |b| puts b }
+else
+  puts "該当する書籍が見つかりません。"
+end
+```
 
 
 ## まとめ
