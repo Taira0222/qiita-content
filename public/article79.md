@@ -7,7 +7,7 @@ tags:
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2024-12-17T09:08:23+09:00'
+updated_at: '2024-12-18T07:09:03+09:00'
 id: 4aedf7bfcbc6619e2b67
 organization_url_name: null
 slide: false
@@ -44,9 +44,9 @@ ignorePublish: false
 実装例
 ```ruby
 # タスクの作成
-task1 = Task.new("Write Report", TeamMember.new("Takeshi"), "高")
-task2 = Task.new("Fix Bug", TeamMember.new("Alex"), "中")
-task3 = Task.new("Prepare Presentation", TeamMember.new("Takeshi"), "低")
+task1 = Task.new("Write Report", TeamMember.new("Takeshi"))
+task2 = Task.new("Fix Bug", TeamMember.new("Alex"))
+task3 = Task.new("Prepare Presentation", TeamMember.new("Takeshi"))
 
 # チームメンバーの作成
 member1 = TeamMember.new("Takeshi")
@@ -73,25 +73,26 @@ manager.delete_task(task2)    # 削除失敗（進行中）
 # タスク一覧の表示
 manager.list_tasks
 ```
-## 上記の問題の回答
-もしよかったら一緒に解いてから一緒に見てみてください。
-なお、以下の回答よりも運用や効率的な面でいい書き方があればフィードバックいただけると励みになります。
+## 上記の問題の回答例
+AIを用いて解答例を作成しました。(追記 修正後のコードは以下に記述)
 
 ```ruby
 class Task
     attr_accessor :name, :assignee, :status
 
-    def initialize(name,assignee)
+    def initialize(name, assignee)
         @name = name
         @assignee = assignee
         @status = "未着手" # 新しいタスクはすべて未着手
     end
+
 end
+
 class TeamMember
     attr_accessor :name, :tasks
     def initialize(name)
         @name = name
-        @tasks =[]
+        @tasks = []
     end
 
     def add_task(task)
@@ -104,16 +105,18 @@ class TaskManager
         @tasks = []
     end
 
-    def add_task(task,member)
-        member.add_task(task) # メンバーにタスクを追加
-        @tasks << task # TaskManager内のタスクリストにもタスクを追加
+    def add_task(task, member)
+        # タスクをメンバーに割り当て
+        member.add_task(task)
+        # タスクマネージャー内にも記録
+        @tasks << task
         puts "タスク「#{task.name}」が担当者「#{member.name}」に追加されました"
     end
     
     def start_task(task)
         if task.status == "未着手"
             task.status = "進行中"
-            puts "タスク「#{task.name}」が進行中に変わりました"
+            puts "タスク「#{task.name}」が進行中になりました"
         else
             puts "タスク「#{task.name}」は未着手でないため、開始できません"
         end
@@ -133,7 +136,7 @@ class TaskManager
             task.status = "保留"
             puts "タスク「#{task.name}」は保留になりました"
         else
-            puts "タスク「#{task.name}」は進行中でないため、保留にすることができません"
+            puts "タスク「#{task.name}」は進行中でないため、保留にできません"
         end
     end
 
@@ -148,7 +151,7 @@ class TaskManager
 
     def delete_task(task)
         if task.status == "未着手" || task.status == "完了"
-            @tasks.delete(task) # Taskmanagerクラスのインスタンス変数@tasks配列内のtaskをdelete
+            @tasks.delete(task)
             task.assignee.tasks.delete(task)
             puts "タスク「#{task.name}」が削除されました"
         else
@@ -158,19 +161,19 @@ class TaskManager
 
     def list_tasks
         puts "\n=== タスク一覧 ==="
-        @tasks.each {|task| puts task}
+        @tasks.each { |task| puts task }
         puts "=================\n\n"
     end
 end
 
-# タスクの作成
-task1 = Task.new("Write Report", TeamMember.new("Takeshi"), "高")
-task2 = Task.new("Fix Bug", TeamMember.new("Alex"), "中")
-task3 = Task.new("Prepare Presentation", TeamMember.new("Takeshi"), "低")
-
 # チームメンバーの作成
 member1 = TeamMember.new("Takeshi")
 member2 = TeamMember.new("Alex")
+
+# タスクの作成
+task1 = Task.new("Write Report", member1)
+task2 = Task.new("Fix Bug", member2)
+task3 = Task.new("Prepare Presentation", member1)
 
 # タスクの管理
 manager = TaskManager.new
@@ -195,62 +198,158 @@ manager.list_tasks
 
 ```
 
-私は`TaskMember`クラスの`add_task`と`TaskManager`の`add.task`と`delete_task(task)`が難しく解けませんでした。
-上記のコードで学んだ点をそれぞれ箇条書きで書いていきたいと思います。
+一見問題なさそうなコードですが、以下の点について問題があります。
+それはタスクとチームメンバーの紐づけが二重で行われているということです。
 
-### 私が理解に苦労した点
+Task.newでタスクに担当者を設定し、TaskManager#add_taskでも担当者にタスクを追加しています。
+これにより、タスクと担当者の関連付けが二重に行われ、整合性が崩れやすくなっています。
+また、`p task1`で中を見てみるとtask1の中の担当者(assignee)はTakeshiであり、member1と紐づけているのですが、
+その中の@tasksが空となりそれぞれの整合性がとれていません。
 
-1. `TeamMember`の`add_task`メソッド
-`add_task` メソッドは、`TeamMember` クラスで定義されており、その目的は チームメンバーにタスクを追加することです。
 ```ruby
+# task1の中身
+task1--- @name = "Write Report" 
+       |
+       |_@assignee-------@name = "Takeshi" 
+       |                |
+       |_@status        |_@tasks =[]  #task1の担当者はTakeshiなのに
+       
+```
+
+## 上記のコードを改善したもの
+Taskの初期値には担当者を設定せず、add_taskメソッドのみで担当者とタスクを関連付けるようにしています
+
+```ruby
+class Task
+  attr_accessor :name, :assignee, :status
+
+  def initialize(name)
+    @name = name
+    @assignee = nil
+    @status = "未着手" # 新しいタスクはすべて未着手
+  end
+
+  def to_s
+    assignee_name = assignee ? assignee.name : "未割り当て"
+    "#{name} (担当者: #{assignee_name}, 状態: #{status})"
+  end
+end
+
 class TeamMember
   attr_accessor :name, :tasks
 
   def initialize(name)
     @name = name
-    @tasks = []  # 担当するタスクを格納するための配列
+    @tasks = []
   end
 
   def add_task(task)
-    tasks << task  # タスクをメンバーのタスクリストに追加
+    tasks << task
   end
 end
-```
-`add_task` メソッドは、引数として渡されたタスク（`task`）を、そのメンバーのタスクリスト（`tasks`）に追加します。
-`tasks` << `task` で配列にタスクを追加しています。
-2. `TaskManager`の`add_task`
-```ruby
+
 class TaskManager
   def initialize
-    @tasks = []  # 管理するタスクを格納する配列
+    @tasks = []
   end
 
+  # タスクを担当者に割り当て、整合性を保つ
   def add_task(task, member)
-    member.add_task(task)  # メンバーにタスクを追加
-    @tasks << task  # TaskManager内のタスクリストにもタスクを追加
+    # タスクに担当者を設定
+    task.assignee = member
+    # 担当者にタスクを追加
+    member.add_task(task)
+    # TaskManagerのリストにもタスクを追加
+    @tasks << task
     puts "タスク「#{task.name}」が担当者「#{member.name}」に追加されました"
   end
-end
-```
-`TaskManager` と `TeamMember` は異なるクラスですが、`add_task` メソッドを通じて、`TaskManager` は `TeamMember` にタスクを割り当てることができる仕組みになっています。
-`member.add_task(task)` を呼ぶことで、実際に `TeamMember` クラスの `tasks` 配列にタスクを追加していますが、同時に `TaskManager` 内の `@tasks` 配列にもタスクが追加されている点が少し複雑に感じました
+  
+  def start_task(task)
+    if task.status == "未着手"
+      task.status = "進行中"
+      puts "タスク「#{task.name}」が進行中になりました"
+    else
+      puts "タスク「#{task.name}」は未着手でないため、開始できません"
+    end
+  end
 
-3. TaskManagerのdelete_task(task)
-```ruby
-class TaskManager
+  def complete_task(task)
+    if task.status == "進行中"
+      task.status = "完了"
+      puts "タスク「#{task.name}」は完了しました"
+    else
+      puts "タスク「#{task.name}」は進行中でないため、完了できません"
+    end
+  end
+
+  def hold_task(task)
+    if task.status == "進行中"
+      task.status = "保留"
+      puts "タスク「#{task.name}」は保留になりました"
+    else
+      puts "タスク「#{task.name}」は進行中でないため、保留にできません"
+    end
+  end
+
+  def resume_task(task)
+    if task.status == "保留"
+      task.status = "進行中"
+      puts "タスク「#{task.name}」は再開され、進行中になりました"
+    else
+      puts "タスク「#{task.name}」は保留でないため、再開できません"
+    end
+  end
+
   def delete_task(task)
     if task.status == "未着手" || task.status == "完了"
-      @tasks.delete(task)  # TaskManagerのタスクリストから削除
-      task.assignee.tasks.delete(task)  # 担当者のタスクリストから削除
+      @tasks.delete(task)
+      task.assignee.tasks.delete(task) if task.assignee
       puts "タスク「#{task.name}」が削除されました"
     else
       puts "タスク「#{task.name}」が未着手または完了でないため、削除できません"
     end
   end
+
+  def list_tasks
+    puts "\n=== タスク一覧 ==="
+    @tasks.each { |task| puts task }
+    puts "=================\n\n"
+  end
 end
+
+# チームメンバーの作成
+member1 = TeamMember.new("Takeshi")
+member2 = TeamMember.new("Alex")
+
+# タスクの作成（担当者はここではまだ設定しない）
+task1 = Task.new("Write Report")
+task2 = Task.new("Fix Bug")
+task3 = Task.new("Prepare Presentation")
+
+# タスクの管理（ここでタスクと担当者を関連付ける）
+manager = TaskManager.new
+manager.add_task(task1, member1)
+manager.add_task(task2, member2)
+manager.add_task(task3, member1)
+
+# タスクの状態変更
+manager.start_task(task1)     # 「未着手」→「進行中」
+manager.complete_task(task1)  # 「進行中」→「完了」
+manager.hold_task(task2)      # 「未着手」のため、保留不可
+manager.start_task(task2)     # 「未着手」→「進行中」
+manager.hold_task(task2)      # 「進行中」→「保留」
+manager.resume_task(task2)    # 「保留」→「進行中」
+
+# タスクの削除
+manager.delete_task(task1)    # 削除成功（完了済み）
+manager.delete_task(task2)    # 削除失敗（進行中）
+
+# タスク一覧の表示
+manager.list_tasks
 ```
-`task.assignee` は、タスクがどのメンバーに割り当てられているかを示すもので、`assignee` に格納されているのは `TeamMember` のインスタンスであることが最初見てもわかりませんでした。
+
 
 # まとめ
 今回はタスク管理システムの作成を通じて、クラス間でどのように情報を管理するか、タスクの状態に応じた操作をどう扱うかを学びました。`add_task`や`delete_task`の処理が複雑に感じましたが、コードを読み進めることで各クラスの責任とタスクの流れを理解できました。
 理解をしている内に再度復習もして自分の実力していきたいと思いました。
+
