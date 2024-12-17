@@ -1,5 +1,5 @@
 ---
-title: 【Ruby】今日書いたコードの振り返り#5
+title: 【Ruby】今日書いたコードの振り返り(条件判断)#5
 tags:
   - Ruby
   - If
@@ -7,7 +7,7 @@ tags:
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2024-12-16T14:22:10+09:00'
+updated_at: '2024-12-17T09:08:23+09:00'
 id: 4aedf7bfcbc6619e2b67
 organization_url_name: null
 slide: false
