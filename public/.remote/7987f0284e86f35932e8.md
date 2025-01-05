@@ -1,12 +1,12 @@
 ---
-title: 【Ruby】今日書いたコードの振り返り(演算子)#13
+title: 【Ruby】今日書いたコードの振り返り(演算子)#11
 tags:
   - Ruby
   - 初心者
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2025-01-04T16:01:27+09:00'
+updated_at: '2025-01-04T16:04:33+09:00'
 id: 7987f0284e86f35932e8
 organization_url_name: null
 slide: false
