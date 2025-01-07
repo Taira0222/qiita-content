@@ -6,7 +6,7 @@ tags:
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2025-01-04T16:04:33+09:00'
+updated_at: '2025-01-07T06:50:27+09:00'
 id: 7987f0284e86f35932e8
 organization_url_name: null
 slide: false
@@ -217,11 +217,58 @@ puts sorted_people.map(&:name).inspect
 #=> ["Bob", "Eve", "Dave", "Alexander"]
 #   (名前の長さ順: 3, 3, 4, 9)
 ```
-このメソッドは「スペースシップ演算子（比較演算子）」と呼ばれるものです。
+このメソッドは「スペースシップ演算子」と呼ばれるものです。
 Ruby の Array#sort や Array#sort_by、Enumerable#max / #min など、要素同士を比較する必要があるメソッドが呼ばれたときに、Ruby は暗黙的にこの <=> を呼び出して、オブジェクト同士の大小を判断します。
 
 今回はpeople.sortで呼び出しているのでそのタイミングでdef <=>が呼び出されます
 なおここでいうohterは比較対象のインスタンスになります
+
+## 追記
+コメントで指摘をいただいたので、追記いたします
+今回はスペースシップ演算子を使用していますが、効率のみを考えるとベストではないといえます。
+```ruby
+ def <=>(other)
+    self.name.length <=> other.name.length
+  end
+```
+上記のスペースシップ演算子によるメソッドの場合、1回比較するに`name.length`が2回呼び出されています。
+また、`sort`を使用して要素数が`n`の配列をソートする際に比較回数はアルゴリズムの都合上`nlogn`回となるので合計`nlogn × 2`回となります
+
+一方で `sort_by` は、**「まずブロックを各要素に 1 回ずつだけ適用して“キー”を取り出し、あとはその“キー”を使って比較する」** というアルゴリズムをとります。
+要素数 `𝑛` なら、`name.length` を計算するのは 最初に各要素に対して 1 回ずつ、合計 `𝑛` 回だけです。
+比較に使うのはあらかじめ得られた数値（たとえば 3, 9 といった “名前の長さ” の整数）なので、後のソート処理では重たいメソッドを再度呼ばないで済みます。またsort_byを使えば<=>メソッドを設定する必要もありません。
+```ruby
+# 例: sort_by の場合
+people.sort_by { _1.name.length }
+# => sort_by の内部で:
+#    1) 各要素に対して name.length を1回ずつだけ計算し、結果をまとめる
+#    2) まとめた長さのリスト（整数）を比較のキーにしてソートする
+```
+演算子を使うという趣旨からは外れますが、実務のことを考えると効率的(呼び出い回数が少ない)なコードを覚えていた方がいいと思いました
+
+それを踏まえた別解を載せておきます
+```ruby
+class Person
+  attr_reader :name
+
+  def initialize(name)
+    @name = name
+  end
+end
+
+people = [
+  Person.new("Eve"),
+  Person.new("Bob"),
+  Person.new("Alexander"),
+  Person.new("Dave")
+]
+
+sorted_people = people.sort_by { _1.name.length }
+
+puts sorted_people.map(&:name).inspect
+#=> ["Bob", "Eve", "Dave", "Alexander"]
+#   (名前の長さ順: 3, 3, 4, 9)
+```
 
 # まとめ
 今回はスペースシップ演算子を使ったコードを扱いました。私の書いたコードでも結果自体は同じでしたが、保守性・拡張性、そしてセキュリティ面を考慮すると、あまりよい設計とは言えない部分がありました。
