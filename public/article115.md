@@ -7,14 +7,14 @@ tags:
   - Railsチュートリアル
   - 未経験エンジニア
 private: false
-updated_at: '2025-01-21T15:16:28+09:00'
+updated_at: '2025-01-22T13:15:08+09:00'
 id: 8f15247bfffbe9067f20
 organization_url_name: null
 slide: false
 ignorePublish: false
 ---
 # はじめに
-こんにちは！アメリカで独学でエンジニアを目指しているTairaです。
+こんにちは！アメリカで独学でエンジニアを目指しているものです。
 現在、`Rails Tutorial`という教材を進めていますが、開発環境として `GitHub Codespaces` ではなく、`Docker + VSCode` を使用しています。
 
 教材で指定されているRubyのバージョンと`.devcontainer`で設定されているRubyのバージョンが異なるため、今回はRubyのバージョンを変更する方法をまとめました。
@@ -22,7 +22,7 @@ ignorePublish: false
 なお、Dockerの知識が十分にある方は `Dockerfile` や `docker-compose.yml` を編集することで変更可能ですが、私はまだその知識が浅いため、別の方法でバージョンを変更しました。
 
 # Rubyバージョンの変更手順
-教材で使用されているRubyのバージョンは 3.2.3 ですが、`.devcontainer` の設定では `3.1.4` になっています(2025年1月20日現在)。この違いを解消するために以下の手順を行いました。
+教材で使用されているRubyのバージョンは 3.2.3 ですが、`.devcontainer` の設定では `3.1.4` になっています(2024年12月17日時点)。この違いを解消するために以下の手順を行いました。
 
 1. Ruby 3.2.3のインストール
 まず、指定のバージョン（Ruby 3.2.3）をインストールします。
