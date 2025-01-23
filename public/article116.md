@@ -7,16 +7,16 @@ tags:
   - Railsチュートリアル
   - 未経験エンジニア
 private: false
-updated_at: '2025-01-22T13:27:09+09:00'
+updated_at: '2025-01-22T13:28:59+09:00'
 id: 7b369018497261d5eb3a
 organization_url_name: null
 slide: false
 ignorePublish: false
 ---
 # はじめに
-
 こんにちは！ アメリカで独学でエンジニアを目指しているものです。
 現在、`Rails Tutorial` という教材を進めており、その中で `bundle install` や `bundle update` を日常的に使っています。初回の学習時は、それらのコマンドが具体的に何をしているのかを深く理解しないまま進めていたので、改めてこれらのコマンドの意味や使い分けを整理したいと思います。
+
 ---
 
 ### **`bundle install`** の概要
