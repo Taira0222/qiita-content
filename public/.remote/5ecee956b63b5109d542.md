@@ -4,10 +4,10 @@ tags:
   - Rails
   - テスト
   - 初心者
-  - Railsチュートリアル
   - 未経験エンジニア
+  - テスト技法
 private: false
-updated_at: '2025-01-29T14:30:57+09:00'
+updated_at: '2025-01-29T14:32:27+09:00'
 id: 5ecee956b63b5109d542
 organization_url_name: null
 slide: false
