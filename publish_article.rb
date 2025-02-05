@@ -39,7 +39,7 @@ FileUtils.mv(dest_path, new_file_path)
 
 # --- Step 3: ~/qiita_githubディレクトリに移動して各ターミナルコマンドを実行 ---
 Dir.chdir(qiita_github_dir) do
-  system("git checkout article_push")
+  # system("git checkout article_push")
   # npx qiita publish コマンド（拡張子.mdは除く）
   publish_cmd = "npx qiita publish article#{new_article_num}"
   puts "Running command: #{publish_cmd}"
