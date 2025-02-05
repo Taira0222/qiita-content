@@ -118,12 +118,17 @@ jobs:
             puts "Running command: #{publish_cmd}"
             cli_output = `#{publish_cmd}`.strip
             puts "CLI output: #{cli_output}"
+
             # 例: "Posted: article131 -> b1d868005ebc79600fc7"
             article_id = cli_output.split("->").last.strip
             published_url = "https://qiita.com/Taira0222/items/#{article_id}"
-            puts "Published URL: #{published_url}"
-            File.write("published_url.txt", published_url)
             
+            # 万が一複数行出力される場合、最初の行のみを使用する
+            clean_url = published_url.split("\n").first.strip
+            puts "Published URL: #{clean_url}"
+            File.write("published_url.txt", clean_url)
+            
+            # GitとGitHubに変更を反映させている
             puts "Running command: git add -A"
             system("git add -A")
             commit_msg = "Add article#{new_article_num}"
