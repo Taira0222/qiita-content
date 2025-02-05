@@ -14,14 +14,14 @@ jobs:
     steps:
       # Step 1: 発行済み URL アーティファクトのダウンロード
       - name: Download Published URL Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: published-url
           path: published
 
       # Step 2: 発行済みタイトル アーティファクトのダウンロード
       - name: Download Published Title Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: published-title
           path: published_title
