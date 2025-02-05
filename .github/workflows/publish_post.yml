@@ -185,19 +185,19 @@ jobs:
           echo "$title" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"        
 
-      - name: Set up Ruby
+      - name: Set up Ruby for X API posting
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.5'
-  
-      - name: Install twitter gem
-        run: gem install twitter
-  
-      - name: Tweet with twitter gem
+
+      - name: Install x-ruby gem
+        run: gem install x-ruby
+
+      - name: Post tweet using x-ruby
         env:
             TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
             TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-            TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
+            TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
             TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
             TWEET_TITLE: ${{ steps.read_title.outputs.title }}
             TWEET_URL: ${{ steps.read_url.outputs.published_url }}
