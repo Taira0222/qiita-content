@@ -2,22 +2,22 @@ name: Publish Article to Qiita
 
 on:
   schedule:
-    - cron: '10 6 5 2 *'  # 毎年2月5日 UTC 06:10 に実行（Boise MST 23:10 に相当、例として2025/02/04 23:10 に実行）
-  workflow_dispatch:      # 手動実行も可能
+    - cron: '10 8 5 2 *'  # 毎年2月5日 UTC 08:10 に実行（Boise MST 01:10 に相当）
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      # ① qiita-content リポジトリ（メインリポジトリ）をチェックアウト
+      # ① qiita-content リポジトリ（メイン）をチェックアウト
       - name: Checkout qiita-content repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.MY_PAT }}   # push 権限が必要な場合は PAT を利用
+          token: ${{ secrets.MY_PAT }}  # push 権限が必要な場合は PAT を利用
           path: qiita-content
 
-      # ② refuge_qiita リポジトリをチェックアウト（private リポジトリの場合、PAT を利用）
+      # ② refuge_qiita リポジトリをチェックアウト（プライベートの場合、PAT を利用）
       - name: Checkout refuge_qiita repository
         uses: actions/checkout@v3
         with:
@@ -26,25 +26,30 @@ jobs:
           ref: main
           path: refuge_qiita
 
-      # ③ Ruby のセットアップ（必要な Ruby バージョンに合わせて変更）
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3.5'
-
-      # ④ Node.js のセットアップ（qiita-cli 実行用）
+      # ③ Node.js のセットアップ（npm 環境の安定化のため）
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      # ⑤ Git のユーザー情報を設定（コミット用）
+      # ④ Ruby のセットアップ（必要な Ruby バージョンに合わせて）
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.5'
+
+      # ⑤ Qiita cli のインストール
+      - name: Install qiita-cli
+        run: npm install -g @qiita/qiita-cli@v1.6.1
+        shell: bash
+
+      # ⑥ Git のユーザー情報を設定（コミット用）
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      # ⑥ 投稿処理スクリプトの実行
+      # ⑦ 投稿処理スクリプトの実行
       - name: Run Publish Article Script
         run: |
           ruby <<'EOF'
@@ -52,22 +57,21 @@ jobs:
           require 'time'
           require 'fileutils'
           
-          # テスト用に対象期間を 2025/02/04 のみに設定
+          # ※テスト用：対象期間を2025/02/05 のみに設定
           boise_time = Time.now.getutc - (7 * 3600)
-          start_date = Time.parse("2025-02-04 00:00:00")
-          end_date   = Time.parse("2025-02-04 23:59:59")
+          start_date = Time.parse("2025-02-05 00:00:00")
+          end_date   = Time.parse("2025-02-05 23:59:59")
           unless boise_time >= start_date && boise_time <= end_date
             puts "現在の Boise 時刻 (#{boise_time}) は実行期間外です。終了します。"
             exit 0
           end
           
-          # ワークスペース上では、qiita-content リポジトリのルートが Dir.pwd/qiita-content
+          # ワークスペース上の各ディレクトリのパスを設定
           qiita_github_dir = File.join(Dir.pwd, 'qiita-content')
           public_dir       = File.join(qiita_github_dir, 'public')
-          # refuge_qiita リポジトリのルート
           refuge_dir       = File.join(Dir.pwd, 'refuge_qiita')
           
-          # --- Step 1: refuge_qiita から数字が一番若い stock ファイルを選び、qiita-content/public へ移動 ---
+          # Step 1: refuge_qiitaから最小番号の stock*.md ファイルを選択する
           stock_files = Dir.entries(refuge_dir).select { |f| f =~ /^stock(\d+)\.md$/ }
           if stock_files.empty?
             puts "refuge_qiita 内に対象ファイルが見つかりません。"
@@ -79,7 +83,7 @@ jobs:
           dest_path   = File.join(public_dir, smallest_file)
           FileUtils.mv(source_path, dest_path)
           
-          # --- Step 2: refuge_qiita 側で、stock ファイルの削除内容をコミット＆push ---
+          # Step 5: refuge_qiita 側で、stock ファイルの削除内容をコミット＆push
           Dir.chdir(refuge_dir) do
             puts "Committing deletion of #{smallest_file} in refuge_qiita"
             system("git add -A")
@@ -88,7 +92,7 @@ jobs:
             system("git push")
           end
           
-          # --- Step 3: qiita-content/public 内の article ファイルから最大番号を取得し、+1 した名前にリネーム ---
+          # Step 2: qiita-content/public 内の article*.md ファイルから最大番号を取得し、新しい記事番号を決定する
           article_files = Dir.entries(public_dir).select { |f| f =~ /^article(\d+)\.md$/ }
           if article_files.empty?
             puts "qiita-content/public 内に article ファイルが見つかりません。"
@@ -101,22 +105,55 @@ jobs:
           puts "Renaming moved file to: #{new_file_name}"
           FileUtils.mv(dest_path, new_file_path)
           
-          # --- Step 4: qiita-content リポジトリ内で、Qiita 公開コマンドと Git コマンドを実行 ---
+          # Step 3: 新しい記事ファイルからタイトルを抽出する
+          begin
+            article_content = File.read(new_file_path)
+            title_line = article_content.lines.find { |line| line.strip.start_with?("title:") }
+            if title_line.nil?
+              puts "No title found in #{new_file_name}"
+              title = ""
+            else
+              title = title_line.sub(/^title:\s*/, "").strip
+            end
+            puts "Extracted title: #{title}"
+            # タイトルを qiita-content 内に保存
+            File.write(File.join(qiita_github_dir, "published_title.txt"), title)
+          rescue => e
+            puts "Error extracting title: #{e}"
+            title = ""
+          end
+          
+          # Step 4: Qiita cli を使用して記事を投稿する
           Dir.chdir(qiita_github_dir) do
             publish_cmd = "npx qiita publish article#{new_article_num}"
             puts "Running command: #{publish_cmd}"
-            system(publish_cmd)
+            published_url = `#{publish_cmd}`.strip
+            puts "Published URL: #{published_url}"
+            # 生成された URL をファイルに保存（後続で利用）
+            File.write("published_url.txt", published_url)
             
             puts "Running command: git add -A"
             system("git add -A")
-            
             commit_msg = "Add article#{new_article_num}"
             commit_cmd = "git commit -m \"#{commit_msg}\""
             puts "Running command: #{commit_cmd}"
             system(commit_cmd)
-            
             puts "Running command: git push"
             system("git push")
           end
           EOF
         shell: bash
+
+      # Step 6: 投稿済み URL アーティファクトのアップロード
+      - name: Upload Published URL Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: published-url
+          path: qiita-content/published_url.txt
+
+      # Step 6 (オプション): 投稿済みタイトル アーティファクトのアップロード
+      - name: Upload Published Title Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: published-title
+          path: qiita-content/published_title.txt
