@@ -185,37 +185,38 @@ jobs:
           echo "$title" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"        
 
-      - name: Set up Ruby for X API posting
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3.5'
-
+          - name: Set up Ruby for X API posting
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: '3.3.5'
+        
       - name: Install x-ruby gem
-        run: gem install x-ruby
-
+        run: gem install x
+        
       - name: Post tweet using x-ruby
         env:
             TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
             TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-            TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+            TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
             TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
             TWEET_TITLE: ${{ steps.read_title.outputs.title }}
             TWEET_URL: ${{ steps.read_url.outputs.published_url }}
         run: |
             ruby << 'EOF'
-            require 'twitter'
-  
-            client = Twitter::REST::Client.new do |config|
+            require 'x'
+            
+            client = X::REST::Client.new do |config|
               config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
               config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
               config.access_token        = ENV['TWITTER_ACCESS_TOKEN_KEY']
               config.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
             end
-  
+            
             # ツイート文の組み立て
             tweet_text = "#{ENV['TWEET_TITLE']}\n#{ENV['TWEET_URL']}\n#Qiita\n#未経験エンジニア\n#駆け出しエンジニア"
-  
+            
             response = client.update(tweet_text)
             puts "Tweet posted successfully!"
             puts "Tweet URL: https://twitter.com/#{response.user.screen_name}/status/#{response.id}"
             EOF
+        
