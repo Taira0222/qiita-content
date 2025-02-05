@@ -21,9 +21,10 @@ jobs:
         uses: actions/checkout@v3
         with:
             repository: Taira0222/refuge_qiita
-            token: ${{ secrets.GITHUB_TOKEN }}
-            ref: master
+            token: ${{ secrets.MY_PAT }}  # GITHUB_TOKEN の代わりに作成した PAT を利用
+            ref: master                   # デフォルトブランチが master である場合
             path: refuge_qiita
+
 
 
       # ③ Ruby のセットアップ（必要な Ruby バージョンに合わせて変更）
