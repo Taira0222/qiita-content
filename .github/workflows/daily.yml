@@ -2,7 +2,7 @@ name: Daily Qiita Post
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 毎日 UTC 05:00 に実行（Boise MST 22:00に相当）
+    - cron: '0 5 * * *'  # 毎日 UTC 05:00 に実行（Boise MST 22:00 に相当）
   workflow_dispatch:      # 手動実行も可能
 
 jobs:
@@ -16,16 +16,14 @@ jobs:
         with:
           path: qiita-content
 
-      # ② refuge_qiita リポジトリをチェックアウト（private リポジトリでも GITHUB_TOKEN で認証可能）
+      # ② refuge_qiita リポジトリをチェックアウト（プライベートの場合は PAT を利用）
       - name: Checkout refuge_qiita repository
         uses: actions/checkout@v3
         with:
-            repository: Taira0222/refuge_qiita
-            token: ${{ secrets.MY_PAT }}  # GITHUB_TOKEN の代わりに作成した PAT を利用
-            ref: main                   # デフォルトブランチが main である場合
-            path: refuge_qiita
-
-
+          repository: Taira0222/refuge_qiita
+          token: ${{ secrets.MY_PAT }}
+          ref: main
+          path: refuge_qiita
 
       # ③ Ruby のセットアップ（必要な Ruby バージョンに合わせて変更）
       - name: Set up Ruby
@@ -33,9 +31,9 @@ jobs:
         with:
           ruby-version: '3.3.5'
 
-      # ※ Gemfile が不要の場合は bundle install のステップは削除しても問題ありません
+      # ※ Gemfile が不要の場合は、bundle install のステップは削除可能
 
-      # ⑤ 投稿処理スクリプトの実行（リモート環境上でのファイル操作を反映）
+      # ④ 投稿処理スクリプトの実行（リモート環境上でのファイル操作を反映）
       - name: Run Publish Article Script
         run: |
           ruby <<'EOF'
@@ -52,11 +50,11 @@ jobs:
             exit 0
           end
           
-          # GitHub Actions では、ワークスペースのルートが Dir.pwd となるため、
-          # qiita-content リポジトリのルートディレクトリとして扱います。
+          # GitHub Actions のワークスペースルートが Dir.pwd であるため、
+          # qiita-content リポジトリのルートを qiita_github_dir、public_dir はその public フォルダとする
           qiita_github_dir = File.join(Dir.pwd, 'qiita-content')
           public_dir       = File.join(qiita_github_dir, 'public')
-          # refuge_dir は別リポジトリ（refuge_qiita）のルートディレクトリ
+          # refuge_dir は、別リポジトリ（refuge_qiita）のルートディレクトリ
           refuge_dir       = File.join(Dir.pwd, 'refuge_qiita')
           
           # --- Step 1: refuge_qiita から数字が一番若い stock ファイルを選択し、qiita-content/public へ移動 ---
@@ -68,3 +66,47 @@ jobs:
           smallest_file = stock_files.sort_by { |f| f.match(/^stock(\d+)\.md$/)[1].to_i }.first
           puts "Moving file: #{smallest_file}"
           source_path = File.join(refuge_dir, smallest_file)
+          dest_path   = File.join(public_dir, smallest_file)
+          FileUtils.mv(source_path, dest_path)
+          
+          # --- Commit the deletion in refuge_qiita ---
+          Dir.chdir(refuge_dir) do
+            puts "Committing deletion of #{smallest_file} in refuge_qiita"
+            system("git add -A")
+            commit_msg = "Remove #{smallest_file} after moving to qiita-content/public"
+            system("git commit -m \"#{commit_msg}\"")
+            system("git push")
+          end
+          
+          # --- Step 2: qiita-content/public 内の article ファイルから最大番号を取得し、+1 した名前にリネーム ---
+          article_files = Dir.entries(public_dir).select { |f| f =~ /^article(\d+)\.md$/ }
+          if article_files.empty?
+            puts "qiita-content/public 内に article ファイルが見つかりません。"
+            exit 1
+          end
+          max_article_num = article_files.map { |f| f.match(/^article(\d+)\.md$/)[1].to_i }.max
+          new_article_num = max_article_num + 1
+          new_file_name   = "article#{new_article_num}.md"
+          new_file_path   = File.join(public_dir, new_file_name)
+          puts "Renaming moved file to: #{new_file_name}"
+          FileUtils.mv(dest_path, new_file_path)
+          
+          # --- Step 3: qiita-content リポジトリ内で、Qiita 公開コマンドと Git コマンドを実行 ---
+          Dir.chdir(qiita_github_dir) do
+            publish_cmd = "npx qiita publish article#{new_article_num}"
+            puts "Running command: #{publish_cmd}"
+            system(publish_cmd)
+            
+            puts "Running command: git add -A"
+            system("git add -A")
+            
+            commit_msg = "Add article#{new_article_num}"
+            commit_cmd = "git commit -m \"#{commit_msg}\""
+            puts "Running command: #{commit_cmd}"
+            system(commit_cmd)
+            
+            puts "Running command: git push"
+            system("git push")
+          end
+          EOF
+        shell: bash
