@@ -146,14 +146,14 @@ jobs:
 
       # Step 6: 投稿済み URL アーティファクトのアップロード
       - name: Upload Published URL Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: published-url
           path: qiita-content/published_url.txt
 
       # Step 6 (オプション): 投稿済みタイトル アーティファクトのアップロード
       - name: Upload Published Title Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: published-title
           path: qiita-content/published_title.txt
