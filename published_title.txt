@@ -1,1 +1,1 @@
-テスト Github acitons
+テスト Github actions
