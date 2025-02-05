@@ -179,14 +179,16 @@ jobs:
       - name: Read Published Title
         id: read_title
         run: |
-          title=$(cat published_title/published_title.txt)
+          title=$(head -n 1 published_title/published_title.txt)
           echo "Extracted title: $title"
-          echo "title=$title" >> $GITHUB_OUTPUT
+          echo "title<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$title" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"        
 
-          - name: Set up Ruby
-          uses: ruby/setup-ruby@v1
-          with:
-            ruby-version: '3.3.5'
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.5'
   
       - name: Install twitter gem
         run: gem install twitter
