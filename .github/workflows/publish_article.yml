@@ -122,10 +122,14 @@ jobs:
           end
           
           # Step 4: Qiita CLI を使用して記事を投稿する
-          Dir.chdir(qiita_github_dir) do
+            Dir.chdir(qiita_github_dir) do
             publish_cmd = "npx qiita publish article#{new_article_num}"
             puts "Running command: #{publish_cmd}"
-            published_url = `#{publish_cmd}`.strip
+            cli_output = `#{publish_cmd}`.strip
+            puts "CLI output: #{cli_output}"
+            # 出力例: "Posted: article131 -> ef1f106864a0c09874d9"
+            article_id = cli_output.split("->").last.strip
+            published_url = "https://qiita.com/Taira0222/items/#{article_id}"
             puts "Published URL: #{published_url}"
             File.write("published_url.txt", published_url)
             
@@ -137,7 +141,7 @@ jobs:
             system(commit_cmd)
             puts "Running command: git push"
             system("git push")
-          end
+            end
           EOF
         shell: bash
 
