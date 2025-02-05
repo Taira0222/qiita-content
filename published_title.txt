@@ -1,1 +1,1 @@
-Github actionsのファイルがうまくいくかのテスト
+【Rails】Bootstrapとは
