@@ -22,7 +22,7 @@ jobs:
         with:
             repository: Taira0222/refuge_qiita
             token: ${{ secrets.MY_PAT }}  # GITHUB_TOKEN の代わりに作成した PAT を利用
-            ref: master                   # デフォルトブランチが master である場合
+            ref: main                   # デフォルトブランチが main である場合
             path: refuge_qiita
 
 
