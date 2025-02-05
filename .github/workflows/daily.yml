@@ -20,9 +20,11 @@ jobs:
       - name: Checkout refuge_qiita repository
         uses: actions/checkout@v3
         with:
-          repository: Taira0222/refuge_qiita    # ご自身の GitHub ユーザー名・リポジトリ名に変更してください
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: refuge_qiita
+            repository: Taira0222/refuge_qiita
+            token: ${{ secrets.GITHUB_TOKEN }}
+            ref: master
+            path: refuge_qiita
+
 
       # ③ Ruby のセットアップ（必要な Ruby バージョンに合わせて変更）
       - name: Set up Ruby
