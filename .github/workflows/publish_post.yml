@@ -214,8 +214,12 @@ jobs:
             
             # ツイート文の組み立て
             tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']} #Qiita #未経験エンジニア #駆け出しエンジニア"
+
+            # Hash を JSON 文字列に変換
+            payload = { text: tweet_text }.to_json
             
-            response = client.post("tweets", { text: tweet_text })
+            # ツイート投稿 (Content-Type は内部で設定される場合もありますが、必要ならヘッダーを指定してください)
+            response = client.post("tweets", payload)
             puts "Tweet posted successfully!"
             puts "Tweet URL: https://twitter.com/#{response.user.screen_name}/status/#{response.id}"
             EOF
