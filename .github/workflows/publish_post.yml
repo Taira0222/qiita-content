@@ -218,7 +218,7 @@ jobs:
             x_client = X::Client.new(**x_credentials)
 
             # ツイート本文の組み立て（改行は問題がある場合はスペースに置換するなど対策してください）
-            tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']} #Qiita #未経験エンジニア #駆け出しエンジニア"
+            tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']}\n#Qiita\n#未経験エンジニア\n#駆け出しエンジニア"
 
             # ツイート投稿（JSON形式の文字列を渡す）
             payload = { text: tweet_text }.to_json
