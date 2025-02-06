@@ -213,9 +213,9 @@ jobs:
             end
             
             # ツイート文の組み立て
-            tweet_text = "#{ENV['TWEET_TITLE']}\n#{ENV['TWEET_URL']}\n#Qiita\n#未経験エンジニア\n#駆け出しエンジニア"
+            tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']} #Qiita #未経験エンジニア #駆け出しエンジニア"
             
-            response = client.post(tweet_text)
+            response = client.post("tweets", { text: tweet_text })
             puts "Tweet posted successfully!"
             puts "Tweet URL: https://twitter.com/#{response.user.screen_name}/status/#{response.id}"
             EOF
