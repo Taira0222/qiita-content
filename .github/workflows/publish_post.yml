@@ -185,9 +185,9 @@ jobs:
           echo "$title" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"        
 
-          - name: Set up Ruby for X API posting
-          uses: ruby/setup-ruby@v1
-          with:
+      - name: Set up Ruby for X API posting
+        uses: ruby/setup-ruby@v1
+        with:
             ruby-version: '3.3.5'
         
       - name: Install x-ruby gem
