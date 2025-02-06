@@ -203,24 +203,28 @@ jobs:
             TWEET_URL: ${{ steps.read_url.outputs.published_url }}
         run: |
             ruby << 'EOF'
-            require 'x'
-            
-            client = X::Client.new do |config|
-              config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-              config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-              config.access_token        = ENV['TWITTER_ACCESS_TOKEN_KEY']
-              config.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
-            end
-            
-            # ツイート文の組み立て
+            require "x"
+            require "json"
+
+            # 環境変数から x‑ruby 用の認証情報を取得
+            x_credentials = {
+            api_key:             ENV['TWITTER_CONSUMER_KEY'],
+            api_key_secret:      ENV['TWITTER_CONSUMER_SECRET'],
+            access_token:        ENV['TWITTER_ACCESS_TOKEN_KEY'],
+            access_token_secret: ENV['TWITTER_ACCESS_TOKEN_SECRET']
+            }
+
+            # クライアントの初期化
+            x_client = X::Client.new(**x_credentials)
+
+            # ツイート本文の組み立て（改行は問題がある場合はスペースに置換するなど対策してください）
             tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']} #Qiita #未経験エンジニア #駆け出しエンジニア"
 
-            # Hash を JSON 文字列に変換
+            # ツイート投稿（JSON形式の文字列を渡す）
             payload = { text: tweet_text }.to_json
-            
-            # ツイート投稿 (Content-Type は内部で設定される場合もありますが、必要ならヘッダーを指定してください)
-            response = client.post("tweets", payload)
+            post = x_client.post("tweets", payload)
+
             puts "Tweet posted successfully!"
-            puts "Tweet URL: https://twitter.com/#{response.user.screen_name}/status/#{response.id}"
+            puts "Tweet URL: https://twitter.com/i/web/status/#{post["data"]["id"]}"
             EOF
         
