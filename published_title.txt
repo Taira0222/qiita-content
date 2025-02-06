@@ -1,1 +1,1 @@
-テスト Github actions
+【Rails】has_secure_passwordの性質
