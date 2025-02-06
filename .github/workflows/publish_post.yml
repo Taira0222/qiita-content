@@ -11,6 +11,9 @@ jobs:
     env:
       QIITA_TOKEN: ${{ secrets.QIITA_TOKEN }}
     steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v3
+
       - name: Checkout qiita-content repository
         uses: actions/checkout@v3
         with:
