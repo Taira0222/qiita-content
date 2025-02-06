@@ -2,7 +2,7 @@ name: Publish Article and Post to X
 
 on:
   schedule:
-    - cron: '10 8 5 2 *'  # 毎年2月5日 UTC 08:10 に実行（Boise MST 01:10 に相当）
+    - cron: '0 2 * * *'  # 日UTC 02:00に実行＝Boise時間19:00に実行するように変更
   workflow_dispatch:
 
 jobs:
@@ -55,8 +55,8 @@ jobs:
           
           # ※テスト用：対象期間を2025/02/05 のみに設定
           boise_time = Time.now.getutc - (7 * 3600)
-          start_date = Time.parse("2025-02-05 00:00:00")
-          end_date   = Time.parse("2025-02-05 23:59:59")
+          start_date = Time.parse("2025-02-05 19:00:00") # スタートの変更
+          end_date   = Time.parse("2025-03-11 19:00:00") # エンドの変更
           unless boise_time >= start_date && boise_time <= end_date
             puts "現在の Boise 時刻 (#{boise_time}) は実行期間外です。終了します。"
             exit 0
