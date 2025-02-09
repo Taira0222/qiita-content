@@ -1,1 +1,1 @@
-【勉強記録】ChatGPT o3-miniを使ってみた
+【Rails】Bootstrapとは
