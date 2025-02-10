@@ -1,1 +1,1 @@
-【Rails】Bootstrapとは
+【Rails】route.rbのパスの指定方法
