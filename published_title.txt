@@ -1,1 +1,1 @@
-【Rails】route.rbのパスの指定方法
+【Rails】テストのgetが行っていること
