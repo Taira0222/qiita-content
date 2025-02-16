@@ -1,1 +1,1 @@
-【Rails】authenticate メソッド
+【Rails】varidatesだけだとなぜデータベースの一意性が担保できないのか？
