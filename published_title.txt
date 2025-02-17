@@ -1,1 +1,1 @@
-【Rails】varidatesだけだとなぜデータベースの一意性が担保できないのか？
+【Rails】testでよく使用されるvalid?メソッド
