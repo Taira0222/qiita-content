@@ -1,1 +1,1 @@
-【Rails】form_with
+【Rails】strong parameters
