@@ -1,1 +1,1 @@
-【Rails】strong parameters
+【Rails】form_with のオプションの指定方法について
