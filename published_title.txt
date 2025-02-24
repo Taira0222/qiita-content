@@ -1,1 +1,1 @@
-【Rails】renderとredirect_toの使い分け
+【Rails】flashが消えない理由とその対処法
