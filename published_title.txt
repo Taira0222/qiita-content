@@ -1,1 +1,1 @@
-【Rails】セッションとその保存場所について
+【Rails】セッション固定攻撃(Session Fixation)
