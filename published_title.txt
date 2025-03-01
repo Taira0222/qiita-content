@@ -1,1 +1,1 @@
-【Rails】セッション固定攻撃(Session Fixation)
+【Bootstrap】collapse とcollapsedの違い
