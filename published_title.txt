@@ -1,1 +1,1 @@
-【Bootstrap】collapse とcollapsedの違い
+【勉強記録】Qiita自動投稿＆X自動ポストシステムをGitHub Actionsを使って再現してみた part1
