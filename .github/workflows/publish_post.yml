@@ -2,7 +2,7 @@ name: Publish Article and Post to X
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # 日UTC 02:00に実行＝Boise時間19:00に実行するように変更
+    - cron: '0 2 * * *'  # UTC 02:00に実行＝Boise時間19:00に実行するように変更
   workflow_dispatch:
 
 jobs:

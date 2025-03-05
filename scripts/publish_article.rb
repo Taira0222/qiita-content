@@ -5,7 +5,7 @@ require 'fileutils'
 # 対象期間を2025/02/05 のみに設定
 boise_time = Time.now.getutc - (7 * 3600)
 start_date = Time.parse("2025-02-05 19:00:00") # スタートの変更
-end_date   = Time.parse("2025-03-11 19:00:00") # エンドの変更
+end_date   = Time.parse("2025-05-06 19:00:00") # エンドの変更 PATの期間まで
 unless boise_time >= start_date && boise_time <= end_date
   puts "現在の Boise 時刻 (#{boise_time}) は実行期間外です。終了します。"
   exit 0
