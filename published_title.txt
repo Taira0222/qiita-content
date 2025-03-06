@@ -1,1 +1,1 @@
-【Rails】Railsチュートリアル8章を読み終えて
+【Linux】ゼロからはじめるLinuxでVirtualBoxを使用しているとAppacheのテストページが開けない
