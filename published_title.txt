@@ -1,1 +1,1 @@
-【Linux】ゼロからはじめるLinuxでVirtualBoxを使用しているとAppacheのテストページが開けない
+【Rails】422 unprocessable_entity
