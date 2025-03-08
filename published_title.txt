@@ -1,1 +1,1 @@
-【Rails】422 unprocessable_entity
+【Rails】303 see_other
