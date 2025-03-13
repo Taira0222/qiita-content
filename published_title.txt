@@ -1,1 +1,1 @@
-【Linux】nmclliコマンド
+【Linux】dnfコマンド
