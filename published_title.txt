@@ -1,1 +1,1 @@
-【Rails】assert_select
+【Rails】フレンドリーフォワーディングとは
