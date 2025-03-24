@@ -1,1 +1,1 @@
-【Rails】フレンドリーフォワーディングとは
+【Rails】テストではfollow_direct!が必要
