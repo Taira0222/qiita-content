@@ -1,1 +1,1 @@
-【Rails】テストではfollow_direct!が必要
+【Rails】Railsチュートリアル10章を読み終えて
