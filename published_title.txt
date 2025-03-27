@@ -1,1 +1,1 @@
-【Docker】Dockerとは
+【Rails】DB上の属性をアップデートするメソッド
