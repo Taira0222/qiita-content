@@ -1,1 +1,1 @@
-【SQL】内部結合と外部結合
+【Rails】assert_equal と assert_matchの違いについて
