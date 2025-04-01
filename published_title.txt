@@ -1,1 +1,1 @@
-【ネットワーク】socket connect
+【Rails】Railsのセッション固定とセッションハイジャックを防ぐ方法
