@@ -1,1 +1,1 @@
-【SQL】hashアルゴリズム
+【SQL】Sort Merge
