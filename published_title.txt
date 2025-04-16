@@ -1,1 +1,1 @@
-【SQL】ダーティーリード
+【SQL】Non-repeatable read
