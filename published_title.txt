@@ -1,1 +1,1 @@
-【ネットワーク】ARP (Address Resolution Protocol)
+【ネットワーク】DHCP
