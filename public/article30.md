@@ -1,8 +1,8 @@
 ---
 title: 【ジョブ】アメリカエンジニアの採用実態
 tags:
-  - ComputerScience
   - 海外
+  - コンピューターサイエンス
   - アメリカ
   - 海外就職
 private: false
