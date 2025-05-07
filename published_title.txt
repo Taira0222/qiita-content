@@ -1,1 +1,1 @@
-【セキュリティ】Basic認証
+【Rails】railsでawsのs3を使用するときの設定
