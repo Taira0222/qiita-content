@@ -1,1 +1,1 @@
-【React】React router クエリパラメータとstateの渡し方
+【React】React routerのLinkを使用しないページ遷移(useNavigate)
