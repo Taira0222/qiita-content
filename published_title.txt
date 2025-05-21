@@ -1,1 +1,1 @@
-【React】Zustand
+【React】Memo
