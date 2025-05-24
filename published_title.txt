@@ -1,1 +1,1 @@
-【git】dependabot.ymlによるtailwindのバージョン変更の対処
+【rails】Preline UIのJavaScriptによる動作（Collapseなど）を実装する方法
