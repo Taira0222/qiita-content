@@ -1,1 +1,1 @@
-【rails】Preline UIのJavaScriptによる動作（Collapseなど）を実装する方法
+【rails】deviseの導入方法
