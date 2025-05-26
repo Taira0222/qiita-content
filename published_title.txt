@@ -1,1 +1,1 @@
-【rails】deviseの導入方法
+【rails】devise で独自のカラムを追加する方法
