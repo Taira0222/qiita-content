@@ -1,1 +1,1 @@
-【rails】devise で独自のカラムを追加する方法
+【rails】use.ymlでencrypted_passwordをハッシュ化する方法
