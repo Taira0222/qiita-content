@@ -1,1 +1,1 @@
-【rails】use.ymlでencrypted_passwordをハッシュ化する方法
+【rails】minitestをデフォルトで作成する設定
