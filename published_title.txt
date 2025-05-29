@@ -1,1 +1,1 @@
-【rails】minitestをデフォルトで作成する設定
+【rails】devise mailer.previewの作成方法
