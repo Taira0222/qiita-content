@@ -1,1 +1,1 @@
-【react】useRef
+【rails】Rails 8のallow_browser modernによる開発者モードでのエラーの解決方法
