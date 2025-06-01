@@ -1,1 +1,1 @@
-【rails】Rails 8のallow_browser modernによる開発者モードでのエラーの解決方法
+【rails】helperを使おう
