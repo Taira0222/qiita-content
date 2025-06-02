@@ -1,1 +1,1 @@
-【rails】helperを使おう
+【rails】mailerのテストで発生したエラーと対処法
