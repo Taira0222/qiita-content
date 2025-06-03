@@ -7,7 +7,7 @@ tags:
   - 未経験エンジニア
   - 独学
 private: false
-updated_at: '2025-05-26T12:14:43+09:00'
+updated_at: '2025-06-03T04:42:37+09:00'
 id: 4f3c0d9dab7f01432e73
 organization_url_name: null
 slide: false
@@ -94,20 +94,8 @@ class ApplicationController < ActionController::Base
   end
 end
 ```
+`configure_permitted_parameters`はストロングパラメータを指しており、deviseで自分で作成したカラムを追加してサインインの時に使用したいときは`application_controller.rb`にまとめて書いておくことが一般的なようです。
 
-さらに `app/controllers/users/registrations_controller.rb` にも、`configure_sign_up_params` のコメントアウトを外して name を追加します。
-
-```ruby
-class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :configure_sign_up_params, only: [:create]
-
-  protected
-
-  def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
-  end
-end
-```
 
 ### 動作確認
 

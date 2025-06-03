@@ -1,1 +1,1 @@
-【rails】mailerのテストで発生したエラーと対処法
+【rails】devise 日本語対応
