@@ -1,1 +1,1 @@
-【rails】devise 日本語対応
+【rails】devise ログイン後のリダイレクト先(after_sign_in_path_for)
