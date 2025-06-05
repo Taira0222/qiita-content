@@ -1,1 +1,1 @@
-【rails】devise ログイン後のリダイレクト先(after_sign_in_path_for)
+【rails】devcontainerで react + rails 開発環境を整えてみた。
