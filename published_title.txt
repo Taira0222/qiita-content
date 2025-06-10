@@ -1,1 +1,1 @@
-【rails】turbo-frame
+【rails】turbo-stream
