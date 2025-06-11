@@ -1,1 +1,1 @@
-【rails】turbo-stream
+【rails】turbo-streamを使用してtodoを作成する方法
