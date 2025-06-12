@@ -1,1 +1,1 @@
-【rails】turbo-streamを使用してtodoを作成する方法
+【GitHub Actions】defaultsでshellをbashと明記しておこう
