@@ -1,1 +1,1 @@
-【GitHub Actions】defaultsでshellをbashと明記しておこう
+【rails】Stimulus
