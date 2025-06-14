@@ -1,1 +1,1 @@
-【rails】Stimulus
+【rails】Stimulus flapicker導入
