@@ -1,1 +1,1 @@
-【rails】Stimulus flapicker導入
+【rails】曜日付き日付をロケールで表示する方法
