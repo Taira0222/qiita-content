@@ -4,24 +4,24 @@ on:
   schedule:
     - cron: '0 2 * * *' # MST(Mountain Standard Time) 19:00 あたりで実行
   workflow_dispatch:
+# pipefail を有効化するため
+defaults:
+  run:
+    shell: bash
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # タイムアウトを5分に設定
+    timeout-minutes: 5 
     env:
       QIITA_TOKEN: ${{ secrets.QIITA_TOKEN }}
     steps:
       - name: Checkout current repository
-        uses: actions/checkout@v3
-
-      - name: Checkout qiita-content repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.MY_PAT }}
-          path: qiita-content
+        uses: actions/checkout@v4
 
       - name: Checkout refuge_qiita repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: Taira0222/refuge_qiita
           token: ${{ secrets.MY_PAT }}
@@ -29,9 +29,11 @@ jobs:
           path: refuge_qiita
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
+          # cache を追加
+          cache: 'npm'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -40,7 +42,6 @@ jobs:
 
       - name: Install qiita-cli
         run: npm install -g @qiita/qiita-cli@latest
-        shell: bash
 
       - name: Configure Git
         run: |
@@ -51,7 +52,6 @@ jobs:
         env:
           QIITA_TOKEN: ${{ secrets.QIITA_TOKEN }}
         run: ruby scripts/publish_article.rb
-        shell: bash
 
       - name: Upload Published URL Artifact
         uses: actions/upload-artifact@v4
@@ -68,9 +68,11 @@ jobs:
   post_to_x:
     needs: publish
     runs-on: ubuntu-latest
+    # タイムアウトを5分に設定
+    timeout-minutes: 5
     steps:
       - name: Checkout current repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download Published URL Artifact
         uses: actions/download-artifact@v4
@@ -117,4 +119,3 @@ jobs:
           TWEET_TITLE: ${{ steps.read_title.outputs.title }}
           TWEET_URL: ${{ steps.read_url.outputs.published_url }}
         run: ruby scripts/post_x.rb
-        shell: bash

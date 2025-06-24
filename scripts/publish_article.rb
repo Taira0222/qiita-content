@@ -2,9 +2,6 @@
 require 'time'
 require 'fileutils'
 
-
-# 時間指定を撤廃した
-
 qiita_github_dir = File.join(Dir.pwd, 'qiita-content')
 public_dir       = File.join(qiita_github_dir, 'public')
 refuge_dir       = File.join(Dir.pwd, 'refuge_qiita')
@@ -20,15 +17,6 @@ puts "Moving file: #{smallest_file}"
 source_path = File.join(refuge_dir, smallest_file)
 dest_path   = File.join(public_dir, smallest_file)
 FileUtils.mv(source_path, dest_path)
-
-# Step 5: refuge_qiita 側で、stock ファイルの削除内容をコミット＆push
-Dir.chdir(refuge_dir) do
-  puts "Committing deletion of #{smallest_file} in refuge_qiita"
-  system("git add -A")
-  commit_msg = "Remove #{smallest_file} after moving to qiita-content/public"
-  system("git commit -m \"#{commit_msg}\"")
-  system("git push")
-end
 
 # Step 2: qiita-content/public 内の article*.md ファイルから最大番号を取得し、新しい記事番号を決定する
 article_files = Dir.entries(public_dir).select { |f| f =~ /^article(\d+)\.md$/ }
@@ -79,5 +67,14 @@ Dir.chdir(qiita_github_dir) do
   puts "Running command: #{commit_cmd}"
   system(commit_cmd)
   puts "Running command: git push"
+  system("git push")
+end
+
+# Step 5: refuge_qiita 側で、stock ファイルの削除内容をコミット＆push
+Dir.chdir(refuge_dir) do
+  puts "Committing deletion of #{smallest_file} in refuge_qiita"
+  system("git add -A")
+  commit_msg = "Remove #{smallest_file} after moving to qiita-content/public"
+  system("git commit -m \"#{commit_msg}\"")
   system("git push")
 end
