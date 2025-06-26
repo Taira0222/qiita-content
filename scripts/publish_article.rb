@@ -2,7 +2,8 @@
 require 'time'
 require 'fileutils'
 
-qiita_github_dir = File.join(Dir.pwd, 'qiita-content')
+
+qiita_github_dir = Dir.pwd
 public_dir       = File.join(qiita_github_dir, 'public')
 refuge_dir       = File.join(Dir.pwd, 'refuge_qiita')
 
