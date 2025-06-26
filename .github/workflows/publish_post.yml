@@ -17,9 +17,11 @@ jobs:
     env:
       QIITA_TOKEN: ${{ secrets.QIITA_TOKEN }}
     steps:
+      # /home/runner/work/qiita-content/qiita-content にこのレポジトリが展開される
       - name: Checkout current repository
         uses: actions/checkout@v4
 
+      # /home/runner/work/qiita-content/qiita-content/refuge_qiita にrefuge_qiitaレポジトリが展開される
       - name: Checkout refuge_qiita repository
         uses: actions/checkout@v4
         with:
@@ -57,13 +59,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: published-url
-          path: qiita-content/published_url.txt
+          path: published_url.txt
 
       - name: Upload Published Title Artifact
         uses: actions/upload-artifact@v4
         with:
           name: published-title
-          path: qiita-content/published_title.txt
+          path: published_title.txt
 
   post_to_x:
     needs: publish
