@@ -13,8 +13,15 @@ x_credentials = {
 # クライアントの初期化
 x_client = X::Client.new(**x_credentials)
 
+# X の投稿の入れたいハッシュタグを変数に格納
+hashtag_qiita = "#Qiita"
+hashtag_engineer = "#未経験エンジニア"
+hashtag_beginner = "#駆け出しエンジニア"
+
+hashtags = "#{hashtag_qiita}\n#{hashtag_engineer}\n#{hashtag_beginner}"
+
 # ツイート本文の組み立て
-tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']}\n#Qiita\n#未経験エンジニア\n#駆け出しエンジニア"
+tweet_text = "#{ENV['TWEET_TITLE']} #{ENV['TWEET_URL']}\n#{hashtags}"
 
 # ツイート投稿（JSON形式の文字列を渡す）
 payload = { text: tweet_text }.to_json

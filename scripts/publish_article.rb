@@ -1,82 +1,107 @@
 #!/usr/bin/env ruby
-require 'time'
 require 'fileutils'
 
+REFUGE_DIR = File.join(Dir.pwd, 'refuge_qiita')
+PUBLIC_DIR = File.join(Dir.pwd, 'public')
+ROOT_DIR   = Dir.pwd
 
-  
-qiita_github_dir = Dir.pwd # /home/runner/work/qiita-content/qiita-content/
-public_dir       = File.join(qiita_github_dir, 'public')
-refuge_dir       = File.join(Dir.pwd, 'refuge_qiita')
+PUBLISHED_TITLE_PATH = File.join(ROOT_DIR, 'published_title.txt')
+PUBLISHED_URL_PATH   = File.join(ROOT_DIR, 'published_url.txt')
 
-# Step 1: refuge_qiita 内の最小番号の stock*.md ファイルを選択する
-stock_files = Dir.entries(refuge_dir).select { |f| f =~ /^stock(\d+)\.md$/ }
-if stock_files.empty?
-  puts "refuge_qiita 内に対象ファイルが見つかりません。"
-  exit 1
+YOUR_QIITA_ACCOUNT = 'Taira0222'  # ご自身のQiitaアカウント名に変更してください
+
+# 次に公開する stock*.md を最小番号で選ぶ
+def find_oldest_stock(refuge_dir)
+  stock_files = Dir.children(refuge_dir).grep(/^stock(\d+)\.md$/)
+  raise 'refuge_qiita 内に対象ファイルが見つかりません。' if stock_files.empty?
+
+  stock_files.min_by { |file| file[/\d+/, 0].to_i }
 end
-smallest_file = stock_files.sort_by { |f| f.match(/^stock(\d+)\.md$/)[1].to_i }.first
-puts "Moving file: #{smallest_file}"
-source_path = File.join(refuge_dir, smallest_file)
-dest_path   = File.join(public_dir, smallest_file)
-FileUtils.mv(source_path, dest_path)
 
-# Step 2: qiita-content/public 内の article*.md ファイルから最大番号を取得し、新しい記事番号を決定する
-article_files = Dir.entries(public_dir).select { |f| f =~ /^article(\d+)\.md$/ }
-if article_files.empty?
-  puts "qiita-content/public 内に article ファイルが見つかりません。"
-  exit 1
+# 選んだ stock を public に移動する
+def move_stock_to_public(filename)
+  source_path = File.join(REFUGE_DIR, filename)
+  dest_path   = File.join(PUBLIC_DIR, filename)
+  FileUtils.mv(source_path, dest_path)
+  dest_path
 end
-max_article_num = article_files.map { |f| f.match(/^article(\d+)\.md$/)[1].to_i }.max
-new_article_num = max_article_num + 1
-new_file_name   = "article#{new_article_num}.md"
-new_file_path   = File.join(public_dir, new_file_name)
-puts "Renaming moved file to: #{new_file_name}"
-FileUtils.mv(dest_path, new_file_path)
 
-# Step 3: 新しい記事ファイルからタイトルを抽出し、published_title.txt に保存
-begin
-  article_content = File.read(new_file_path)
-  title_line = article_content.lines.find { |line| line.strip.start_with?("title:") }
-  title = title_line ? title_line.sub(/^title:\s*/, "").strip : ""
+# 既存の article*.md から次の記事番号を決める
+def next_article_number
+  article_files = Dir.children(PUBLIC_DIR).grep(/^article(\d+)\.md$/)
+  raise 'qiita-content/public 内に article ファイルが見つかりません。' if article_files.empty?
+
+  article_files.map { |file| file[/\d+/, 0].to_i }.max + 1
+end
+
+# 移動した stock を article 名にリネームする
+def rename_to_article(path, article_num)
+  new_name = "article#{article_num}.md"
+  new_path = File.join(PUBLIC_DIR, new_name)
+  FileUtils.mv(path, new_path)
+  new_path
+end
+
+# 記事中の title: 行を取り出して控えておく
+def extract_title(article_path)
+  content = File.read(article_path)
+  title_line = content.lines.find { |line| line.strip.start_with?('title:') }
+  title_line ? title_line.sub(/^title:\s*/, '').strip : ''
+rescue StandardError => e
+  warn "Error extracting title: #{e}"
+  ''
+end
+
+# Qiita CLI で公開し、公開 URL を返す
+def publish_article(article_num)
+  Dir.chdir(ROOT_DIR) do
+    cmd = "npx qiita publish article#{article_num}"
+    puts "Running command: #{cmd}"
+    cli_output = `#{cmd}`.strip
+    puts "CLI output: #{cli_output}"
+
+    article_id = cli_output.split('->').last&.strip
+    raise 'Qiita CLI 出力から記事IDを取得できませんでした。' unless article_id && !article_id.empty?
+
+    url = "https://qiita.com/#{YOUR_QIITA_ACCOUNT}/items/#{article_id}"
+    url.split("\n").first.strip
+  end
+end
+
+# 指定ディレクトリで git add/commit/push するヘルパー
+def commit_and_push(dir, message)
+  Dir.chdir(dir) do
+    puts "Running command: git add -A"
+    system('git add -A')
+
+    puts "Running command: git commit -m \"#{message}\""
+    system(%(git commit -m "#{message}"))
+
+    puts 'Running command: git push'
+    system('git push')
+  end
+end
+
+# 公開フロー全体を実行する
+def main
+  oldest_stock = find_oldest_stock(REFUGE_DIR)
+  puts "Moving file: #{oldest_stock}"
+  moved_path = move_stock_to_public(oldest_stock)
+
+  article_num = next_article_number
+  puts "Renaming moved file to: article#{article_num}.md"
+  article_path = rename_to_article(moved_path, article_num)
+
+  title = extract_title(article_path)
   puts "Extracted title: #{title}"
-  File.write(File.join(qiita_github_dir, "published_title.txt"), title)
-rescue => e
-  puts "Error extracting title: #{e}"
-  title = ""
+  File.write(PUBLISHED_TITLE_PATH, title)
+
+  published_url = publish_article(article_num)
+  puts "Published URL: #{published_url}"
+  File.write(PUBLISHED_URL_PATH, published_url)
+
+  commit_and_push(ROOT_DIR, "Add article#{article_num}")
+  commit_and_push(REFUGE_DIR, "Remove #{oldest_stock} after moving to qiita-content/public")
 end
 
-# Step 4: Qiita CLI を使用して記事を投稿する
-Dir.chdir(qiita_github_dir) do
-  publish_cmd = "npx qiita publish article#{new_article_num}"
-  puts "Running command: #{publish_cmd}"
-  cli_output = `#{publish_cmd}`.strip
-  puts "CLI output: #{cli_output}"
-
-  # 例: "Posted: article131 -> b1d868005ebc79600fc7"
-  article_id = cli_output.split("->").last.strip
-  published_url = "https://qiita.com/Taira0222/items/#{article_id}"
-
-  # 万が一複数行出力される場合、最初の行のみを使用する
-  clean_url = published_url.split("\n").first.strip
-  puts "Published URL: #{clean_url}"
-  File.write("published_url.txt", clean_url)
-
-  # GitとGitHubに変更を反映させている
-  puts "Running command: git add -A"
-  system("git add -A")
-  commit_msg = "Add article#{new_article_num}"
-  commit_cmd = "git commit -m \"#{commit_msg}\""
-  puts "Running command: #{commit_cmd}"
-  system(commit_cmd)
-  puts "Running command: git push"
-  system("git push")
-end
-
-# Step 5: refuge_qiita 側で、stock ファイルの削除内容をコミット＆push
-Dir.chdir(refuge_dir) do
-  puts "Committing deletion of #{smallest_file} in refuge_qiita"
-  system("git add -A")
-  commit_msg = "Remove #{smallest_file} after moving to qiita-content/public"
-  system("git commit -m \"#{commit_msg}\"")
-  system("git push")
-end
+main
